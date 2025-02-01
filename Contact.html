@@ -11,15 +11,25 @@
         input, textarea { width: 100%; padding: 10px; border: 1px solid #ccc; border-radius: 4px; }
         button { padding: 10px 20px; background-color: #4CAF50; color: white; border: none; border-radius: 4px; cursor: pointer; }
         button:hover { background-color: #45a049; }
+        .back-btn {
+            position: absolute;
+            bottom: 10px;
+            right: 10px;
+            padding: 10px 15px;
+            background-color: hwb(131 3% 66%);
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+        }
     </style>
 </head>
 <body>
 
 <div class="contact-form">
     <h2>Contactați-ne</h2>
-<form
-action="https://formspree.io/f/mldgnnwe?redirect=https://eving.md/multumim.html" method="POST">
-
+    <form id="contact-form">
         <div class="form-group">
             <label for="email">Adresa Email:</label>
             <input type="email" id="email" name="email" required>
@@ -36,17 +46,47 @@ action="https://formspree.io/f/mldgnnwe?redirect=https://eving.md/multumim.html"
             <label for="message">Mesaj:</label>
             <textarea id="message" name="message" rows="5" required></textarea>
         </div>
-        <button type="submit">transmite</button>
-        <button onclick="window.location.href='https://eving.md'" 
-        style="position: absolute; bottom: 10px; right: 10px; 
-               padding: 10px 15px; background-color: hwb(131 3% 66%); 
-               color: white; border: none; border-radius: 5px; 
-               cursor: pointer; font-size: 16px;">
-        &#8592; Înapoi→
-        
-        
+        <button type="submit">Trimite</button>
     </form>
+
+    <!-- Кнопка для возврата на главную страницу -->
+    <button class="back-btn" onclick="window.location.href='https://eving.md'">
+        &#8592; Înapoi→
+    </button>
 </div>
+
+<!-- JavaScript для отправки формы через fetch и редиректа -->
+<script>
+    const form = document.getElementById('contact-form');
+    const errorMessage = document.createElement('div');
+    form.appendChild(errorMessage);
+
+    form.addEventListener('submit', function(event) {
+        event.preventDefault();  // Останавливаем обычное отправление формы
+
+        const formData = new FormData(form);
+
+        fetch('https://formspree.io/f/mldgnnwe', {
+            method: 'POST',
+            body: formData
+        })
+        .then(response => {
+            if (response.ok) {
+                // Если форма отправлена успешно, перенаправляем на страницу благодарности
+                window.location.href = 'https://eving.md/multumim.html';
+            } else {
+                // Показать сообщение об ошибке, если форма не отправлена
+                errorMessage.textContent = 'Произошла ошибка при отправке сообщения.';
+                errorMessage.style.color = 'red';
+            }
+        })
+        .catch(error => {
+            // Показать сообщение об ошибке при неудачной попытке отправки
+            errorMessage.textContent = 'Не удалось отправить форму. Попробуйте снова.';
+            errorMessage.style.color = 'red';
+        });
+    });
+</script>
 
 </body>
 </html>
